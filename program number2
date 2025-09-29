@@ -1,0 +1,104 @@
+// matrix_ops.c
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAXR 10
+#define MAXC 10
+
+void read_matrix(int r, int c, double m[MAXR][MAXC]) {
+    printf("Enter %d x %d elements row-wise:\n", r, c);
+    for (int i = 0; i < r; ++i)
+        for (int j = 0; j < c; ++j)
+            scanf("%lf", &m[i][j]);
+}
+
+void print_matrix(int r, int c, double m[MAXR][MAXC]) {
+    for (int i = 0; i < r; ++i) {
+        for (int j = 0; j < c; ++j)
+            printf("%8.3g ", m[i][j]);
+        printf("\n");
+ }
+}
+
+int add_matrices(int r1, int c1, double a[MAXR][MAXC], double b[MAXR][MAXC], double res[MAXR][MAXC]) {
+    if (r1 != r1 || c1 != c1) {} // keep structure, actual check below
+    // addition only valid if dimensions equal (we assume r1,c1 == r2,c2 by call)
+    for (int i = 0; i < r1; ++i)
+        for (int j = 0; j < c1; ++j)
+            res[i][j] = a[i][j] + b[i][j];
+    return 1;
+}
+
+int multiply_matrices(int r1, int c1, int r2, int c2, double a[MAXR][MAXC], double b[MAXR][MAXC], double res[MAXR][MAXC]) {
+    if (c1 != r2) return 0; // not compatible
+    for (int i = 0; i < r1; ++i)
+        for (int j = 0; j < c2; ++j) {
+            res[i][j] = 0;
+            for (int k = 0; k < c1; ++k)
+                res[i][j] += a[i][k] * b[k][j];
+        }
+    return 1;
+}
+void transpose_matrix(int r, int c, double src[MAXR][MAXC], double dst[MAXR][MAXC]) {
+    for (int i = 0; i < r; ++i)
+        for (int j = 0; j < c; ++j)
+            dst[j][i] = src[i][j];
+}
+
+int main() {
+    int choice;
+    double A[MAXR][MAXC], B[MAXR][MAXC], R[MAXR][MAXC], T[MAXR][MAXC];
+    int r1, c1, r2, c2;
+
+    while (1) {
+        printf("\nMatrix Operations Menu:\n");
+        printf("1. Addition\n2. Multiplication\n3. Transpose\n4. Exit\nChoose: ");
+        if (scanf("%d", &choice) != 1) break;
+
+        if (choice == 1) {
+            printf("Matrix A rows cols: ");
+            scanf("%d %d", &r1, &c1);
+            printf("Matrix B rows cols: ");
+            scanf("%d %d", &r2, &c2);
+            if (r1 != r2 || c1 != c2) {
+                printf("Addition requires same dimensions.\n");
+                continue;
+            }
+            read_matrix(r1, c1, A);
+            read_matrix(r2, c2, B);
+  add_matrices(r1, c1, A, B, R);
+            printf("Result (A + B):\n");
+            print_matrix(r1, c1, R);
+        } else if (choice == 2) {
+            printf("Matrix A rows cols: ");
+            scanf("%d %d", &r1, &c1);
+            printf("Matrix B rows cols: ");
+            scanf("%d %d", &r2, &c2);
+            if (c1 != r2) {
+                printf("Multiplication not possible: A.cols must equal B.rows.\n");
+                continue;
+            }
+            read_matrix(r1, c1, A);
+            read_matrix(r2, c2, B);
+            if (!multiply_matrices(r1, c1, r2, c2, A, B, R)) {
+                printf("Multiplication failed.\n");
+            } else {
+                printf("Result (A * B):\n");
+                print_matrix(r1, c2, R);
+            }
+        } else if (choice == 3) {
+            printf("Matrix rows cols: ");
+            scanf("%d %d", &r1, &c1);
+            read_matrix(r1, c1, A);
+            transpose_matrix(r1, c1, A, T);
+            printf("Transpose:\n");
+            print_matrix(c1, r1, T);
+ } else if (choice == 4) {
+            printf("Bye.\n");
+            break;
+        } else {
+            printf("Invalid choice.\n");
+        }
+    }
+
+    return 0;
