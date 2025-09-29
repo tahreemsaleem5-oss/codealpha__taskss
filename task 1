@@ -1,0 +1,52 @@
+/*calculator.c*/
+#include<stdio.h>
+#include<stdlib.h>
+
+int main()
+{ double a, b, result;
+char op;
+
+printf("Basic calculator\n");
+printf ("enter expression like :12.5 + 3.4\n);
+if(scanf("%if%c%if", &a, &op, &b)!=3)
+{
+printf("invalid input.\n");
+return1;
+}
+switch (op){
+case'+':
+result=a+b;
+printf("%.6g %c %.6g= %.6g\n",a,op,b,result);
+break;
+case'-';
+result=a-b;
+printf("%.6g %c %.6g= %.6g\n",a,op,b,result);
+break;
+case'*';
+result=a*b;
+printf("%.6g %c %.6g= %.6g\n",a,op,b,result);
+break;
+cas'/';
+if(b==0.0){
+printf("error:division by zero.\n");
+return 1:
+}
+result= a/b;
+printf("%.6g %c %.6g= %.6g\n",a,op,b,result);
+break;
+case'%':
+/*modulous only for integers*/
+if((long long)a==a &&(long long)b == b){long long ai = (long long)a, bi =(long long)b;
+if(bi == 0){
+printf("error: division (modulo) by zero.\n");
+return 1;}
+printf("%lld %c %lld =%lld\n",ai, op, bi,ai % bi);
+}else{printf("error: modulous requires integers operands.\n");
+return 1;}
+break;
+default;
+printf("unsuppoerted operator '%c'.Use + - * /%%.\n", op);
+return1;
+}
+return 0;
+}
